@@ -29,8 +29,8 @@ def init_dashboard(server):
     dash_app.index_string = html_layout
     unique_vals = load_unique_vals()
     register_callbacks(dash_app)
-    
-    
+
+
     card_content = [
                 dbc.CardHeader("Enter Your Information Here"),
                 dbc.CardBody([
@@ -73,7 +73,7 @@ def init_dashboard(server):
                             dcc.Dropdown(
                                 id='sex-dropdown',
                                 options=[
-                                    {'label': i, 'value': i} for i in unique_vals['subject_sex']    
+                                    {'label': i, 'value': i} for i in unique_vals['subject_sex']
                                 ],
                                 clearable=False,
                                 value='female')
@@ -161,7 +161,7 @@ def init_dashboard(server):
                 dbc.Row(
                 dbc.Button('Run Analysis', id="submit-button"), style={'padding': '20px', 'padding-top': '10px'})
                 ]
-    
+
     # Create Dash Layout
     dash_app.layout = html.Div(id='main-div', children=[
         dbc.Container([
@@ -209,10 +209,10 @@ def register_callbacks(app):
             'dayofweek': args[9],
             'quarter': args[8],
             }
-        
+
         if args[0] == 0:
             return html.H1("Please Fill Out the Form to the Left and Hit 'Run Analysis' To See Your Chances of Being Arrested or Searched")
-        
+
         if args[1] in 'You have been searched':
             params['search_outcome'] = 'unknown'
             params['searched'] = True
@@ -222,9 +222,9 @@ def register_callbacks(app):
         elif args[1] == 'You are pulled over':
             params['search_outcome'] = 'unknown'
             params['searched'] = False
-        
+
         params = add_search_inputs(params, args[11])
-        request = requests.get(url=f"http://localhost:5000/api/v1/{args[10]}", params=params).json()
+        request = requests.get(url=f"http://police-project-test.xyz/api/v1/{args[10]}", params=params).json()
         chart_data = request.pop('outcome_vals')
         base_value = chart_data.pop('base_value')
         new_sample = DataFrame(chart_data, index=[0]).T
@@ -235,8 +235,8 @@ def register_callbacks(app):
             fig = go.Figure()
             fig.add_trace(go.Bar(x=new_sample[0], y=new_sample.index, text=new_sample[0], orientation='h', marker={'color': new_sample['Positive'], 'colorscale': 'spectral'}))
             fig.update_traces(texttemplate='%{text:.0%}', textposition='auto')
-            fig.update_layout(uniformtext_minsize = 8, 
-                      uniformtext_mode = 'hide', 
+            fig.update_layout(uniformtext_minsize = 8,
+                      uniformtext_mode = 'hide',
                       xaxis = {'tickformat' : '%'},
                       xaxis_title = f"Base Value: {base_value:.2%}",
                       title={'text': "What Contributes to the Outcome: ",
@@ -249,12 +249,12 @@ def register_callbacks(app):
                 tickangle = -45)
             return [html.H1(f"Chance of {args[10]}: {request['proba']:.1%}", style={'textAlign': 'center'}),
                     dcc.Graph(id='explainer-graph', figure=fig)]
-        
+
         except Exception as e:
             print(f"Error: {e}")
             return html.H3("Uh-oh!  Something did not work right.  Please try looking over your values to make sure they are\
                            correct.  If they are, please try again later as something is not right.")
-        
+
     @app.callback(Output('search-row', 'children'),
                    Input('scenario-radio', 'value'),
                    State({'type': 'input', 'index': ALL}, 'value'))
@@ -263,7 +263,7 @@ def register_callbacks(app):
             dropdown_val = None
         else:
             dropdown_val = search_vals[0]
-            
+
         print(f"Value of search_vals: {search_vals}")
         print(f"Value of dropdown_val: {dropdown_val}")
 
@@ -283,7 +283,7 @@ def register_callbacks(app):
                             multi = True,
                             value = dropdown_val)
                         ])
-        
+
         elif scenario_val == 'Your search has been completed':
             return [
                     dbc.Col([
@@ -301,7 +301,7 @@ def register_callbacks(app):
                     dbc.Col([
                         dbc.Label("Result of Search", html_for={'type': 'input', 'index': 1}),
                         dcc.Dropdown(
-                            id={'type': 'input', 
+                            id={'type': 'input',
                                 'index': 1},
                             options = [
                                 {'label': 'Contraband Found', 'value': True },
@@ -311,7 +311,7 @@ def register_callbacks(app):
                             clearable=False)
                             ], width=6)
                     ]
-        
+
     @app.callback([Output('outcome-radio', 'value'),
                    Output('outcome-radio', 'options')],
                   Input('scenario-radio', 'value'))
