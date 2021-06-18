@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col align-self-center">
+    <hr>
+  </div>
+  <div class="col-md-4">
+    </div>
+</div>
+
+<h4 class='text-center' id='project'>The Project</h4>
+
+
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Where does your data come from?
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        It was taken from the <a href="https://openpolicing.stanford.edu/">Stanford Open Policing Project</a>.  Police deparments from the North Carolina were used because the data was
+        <a href="https://openpolicing.stanford.edu/data/">consistent and well documented.</a>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        What do the percentages in the bar chart mean?
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        The values in the bar chart tell you how much each individual feature moved the prediction from the base value.  For example,
+        if you were to choose "You're pulled over" for your scenario and "Whether you are arrested" for "Outcome to analyze", the base prediction
+        without any other info is 45.28%.  If you see value of -10% for `Sex: Male`, that means that the predicted value moved from 45.28% to 35.28%
+        based off that one feature.  If you start with the base prediction value and add up the contributions from each feature, you will have
+        the final predicted value at the top of the chart.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        How Accurate Are These Predictions?
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        As <i>point estimates</i>, the predicted values for search/arrest are not very accurate.  It gets it right around 20% of the time.  However,
+        this is somewhat by design.  The statistical model used for this project was built to make sure it would be able to detect an event <i>if it were to happen</i>,
+        which means it tends to be overly sensitive to things that might cause a search/arrest to take place.  This makes it easier to understand how different
+        facts interact to produce an outcome, but at the expense of overzealous forecasts of something unusual happening.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFour">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        If these predictions are not accurate, why use them?
+      </button>
+    </h2>
+    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        While our model tends to overpredict bad things happening, it does a better job of exploring how different circumstances of an event interact to
+        influence a particular outcome.  So if one were to ask, "what is the relative impact of being black vs. white if you're getting pulled over for
+        speeding in Charlotte?", it does a pretty good job of demonstrating the relative impact of these things for the situation you specify.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFive">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+        Are these predictions biased in any particular way?
+      </button>
+    </h2>
+    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        They are biased towards predicting the event in question will happen.  Ie, if you are looking for whether or not you will be searched, the predicted
+        values are likely higher than in reality.  A simple way to see this is to look at the base value of whether or not you are arrested.  It's 45%.
+        However, in the actual data only about 2.5% of people are arrested.  So clearly our model starts out a little trigger happy (no pun intented).  However,
+        this setup is not arbitrary.  Because most people don't get arrested, we wanted to make sure that when someone does, the characteristics that led to it
+        are amplified so we can understand what led to something happening.  As a result, we overweighted searches and arrests, which leads to the results that
+        you see.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingSix">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+        Does the data used for this project have shortcomings?
+      </button>
+    </h2>
+    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        Yes.  While the data source we used is probably the best around for these types of projects, it still leaves fairly large holes open with regards to
+        what actually happened.  Specifically, the details of what was specifically said or the actions that people took are not specified.  The reasons for searches and stops
+        were placed into one of six categories, but this almost certainly leaves out lots of contextual information about what went on.
+
+        And of course, if any of this info was not entered accurately then we do not have a foolproof way to get around this.
+      </div>
+    </div>
+  </div>
+</div>
+
+<br />
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col align-self-center">
+    <hr>
+  </div>
+  <div class="col-md-4">
+    </div>
+</div>
+<br />
+
+<h4 class='text-center' id='technical'>Technical Details</h4>
+
+<div class="accordion" id="accordionExample2">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne2">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+        What type of model does this project use?
+      </button>
+    </h2>
+    <div id="collapseOne2" class="accordion-collapse collapse show" aria-labelledby="headingOne2" data-bs-parent="#accordionExample2">
+      <div class="accordion-body">
+        When you fill out the form on the home page, you are actually accessing one of four different models, one for each different version
+        of scenario and outcome that can be chosen on the form.  They are all built with <a href="https://xgboost.readthedocs.io/en/latest/">xgboost</a>.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo2">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+        How were your statistical models parameterized?
+      </button>
+    </h2>
+    <div id="collapseTwo2" class="accordion-collapse collapse" aria-labelledby="headingTwo2" data-bs-parent="#accordionExample2">
+      <div class="accordion-body">
+        They all use a <code>tree depth</code> of 3 and a <code>learning rate</code> of 0.1.  The number of boosting rounds used in each one varies
+        from around 800-1900, with this number determined via early stopping.  Columns were subsampled at 60% for ease of computation and a learning objective
+        of <code>binary:logistic</code> was used, with <a href="https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-imbalanced-classification/">Area Under the Precision-Recall Curve</a> used as the validation metric.  The <code>aucpr</code>
+        score was used on a validation set to determine best model parameters.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree2">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree2" aria-expanded="false" aria-controls="collapseThree2">
+        How were the feature contributions calculated?
+      </button>
+    </h2>
+    <div id="collapseThree2" class="accordion-collapse collapse" aria-labelledby="headingThree2" data-bs-parent="#accordionExample2">
+      <div class="accordion-body">
+        They were calculated using <a href="https://shap.readthedocs.io/en/latest/index.html">SHAP values.</a>  (You can read more about those <a href="https://christophm.github.io/interpretable-ml-book/shap.html">here</a>).
+        When you hit the <code>Run Analysis</code> button a <code>TreeExplainer</code> calculates the percent contributions of each value and that gets displayed in the chart.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFour2">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour2" aria-expanded="false" aria-controls="collapseFour2">
+        What technology stack is used for  this project?
+      </button>
+    </h2>
+    <div id="collapseFour2" class="accordion-collapse collapse" aria-labelledby="headingFour2" data-bs-parent="#accordionExample2">
+      <div class="accordion-body">
+        In addition to SHAP and XGboost, the interactive charts are built using <a href="https://dash.plotly.com/">DASH</a>, which is then embedded in a <a href="https://flask.palletsprojects.com/en/2.0.x/">flask application</a>.  Flask is also
+        used to serve the API.  It's python all the way down.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

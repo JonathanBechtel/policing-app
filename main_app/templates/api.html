@@ -1,0 +1,609 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+The service used to generate the model output that you see on the home page can also be accessed via API.  This might
+be useful if you want to study the values generated more thoroughly or use it in your own project in some way.
+
+Predictions are made available via two different endpoints, one to predict probability of arrest, and the other
+to predict probability of being searched.
+
+Here's information on how to use each:
+
+<p class="text-center"><a href="#search">Search Endpoint</a>  --  <a href="#arrest">Arrest Endpoint</a></p>
+
+<br />
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col align-self-center">
+    <hr>
+  </div>
+  <div class="col-md-4">
+    </div>
+</div>
+<br />
+
+<h4 class="text-center" id="search">Search Endpoint: <code>/api/v1/search</code></h4>
+<br />
+<h5 class='text-center'>Parameters: </h5>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Required</th>
+      <th scope="col">Data Type</th>
+      <th scope="col">Accepted Values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">city</th>
+      <td>Yes</td>
+      <td>String</td>
+      <td>One of <code>[Charlotte, Durham, Fayetteville, Greensboro, Raleigh-Winston, Salem, Other]</code>.  Anything
+      that is not one of the specific cities will be treated the same way as the value <code>Other</code> (ie, it does not exist in our model, and will default towards a naive estimates
+      for this feature).</td>
+    </tr>
+    <tr>
+      <th scope="row">subject_age</th>
+      <td>Yes</td>
+      <td>Integer</td>
+      <td>Integer greater than 0.</td>
+    </tr>
+    <tr>
+      <th scope="row">subject_race</th>
+      <td>Yes</td>
+      <td>String</td>
+      <td>One of <code>['black', 'white', 'hispanic', 'unknown', 'other', 'asian/pacific islander']</code></td>
+    </tr>
+    <tr>
+      <th scope="row">subject_sex</th>
+      <td>Yes</td>
+      <td>String</td>
+      <td>One of <code>['male', 'female']</code>.  Other values will be treated as neither male nor female and receive a naive estimate
+      for this feature</td>
+    </tr>
+    <tr>
+      <th scope="row">reason_for_stop</th>
+      <td>Yes</td>
+      <td>String</td>
+      <td>One of <code>['Safe Movement Violation', 'Vehicle Regulatory Violation', 'Vehicle Equipment Violation', 'Other Motor Vehicle Violation', 'Stop Light/Sign Violation',
+          'Speed Limit Violation', 'Investigation', 'Driving While Impaired', 'Seat Belt Violation','Checkpoint']</code>.
+          Other values will be receive a naive estimate for this feature</td>
+    </tr>
+    <tr>
+      <th scope="row">hour</th>
+      <td>Yes</td>
+      <td>Integer</td>
+      <td>Integer between the values of 0 and 23 (inclusive)</td>
+    </tr>
+    <tr>
+      <th scope="row">hour</th>
+      <td>Yes</td>
+      <td>Integer</td>
+      <td>Integer between the values of 0 and 23 (inclusive)</td>
+    </tr>
+    <tr>
+      <th scope="row">dayofweek</th>
+      <td>Yes</td>
+      <td>Integer</td>
+      <td>Integer between the values of 0 and 6 (inclusive).  Values have the following mapping: <code>
+        0: 'Monday',
+        1: 'Tuesday',
+        2: 'Wednesday',
+        3: 'Thursday',
+        4: 'Friday',
+        5: 'Saturday',
+        6: 'Sunday'
+      </code></td>
+    </tr>
+    <tr>
+      <th scope="row">quarter</th>
+      <td>Yes</td>
+      <td>Integer</td>
+      <td>Integer between the values of 1 and 4 (inclusive).  Values have the following mapping: <code>
+        1: 'Winter',
+        2: 'Spring',
+        3: 'Summer',
+        4: 'Fall',
+      </code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col align-self-center">
+    <hr>
+  </div>
+  <div class="col-md-4">
+    </div>
+</div>
+
+<h5 class='text-center'>Returns: </h5>
+
+<p>The resulting json object will include all of the values provided at the time of request, as well as the following info:
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Data Type</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">proba</th>
+        <td>float</td>
+        <td>Probability of suspect getting arrested based on information given in the request</td>
+      </tr>
+      <tr>
+        <th scope="row">outcome</th>
+        <td>string</td>
+        <td>Will return the value <code>search</code></td>
+      </tr>
+      <tr>
+        <th scope="row">outcome_vals</th>
+        <td>object/dictionary</td>
+        <td>Key/value store of each feature and its contribution to the final prediction.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col align-self-center">
+      <hr>
+    </div>
+    <div class="col-md-4">
+      </div>
+  </div>
+
+  <h5 class='text-center'>Sample Code: </h5>
+  <p class='text-center'>Here's how you would make such an API request using Python: </p>
+
+  <pre>
+    <code>
+      import requests
+
+      api_url = 'http://transparentpolicing.org/api/v1/search'
+      params  = {
+        'city': 'Charlotte',
+        'subject_age': 38,
+        'subject_race': 'hispanic',
+        'subject_sex': 'male',
+        'reason_for_stop': 'Speed Limit Violation',
+        'hour': 15,
+        'dayofweek': 3,
+        'quarter': 2
+      }
+
+      data = requests.get(api_url, params=params).json()
+    </code>
+  </pre>
+
+  <p class='text-center'>This request would provide the following response: </p>
+
+  <pre>
+  <samp>
+    {'city': 'Charlotte',
+     'dayofweek': 3,
+     'hour': 15,
+     'outcome': 'search',
+     'outcome_vals': {'Age: 38': -0.03153631662746672,
+      'City: Charlotte': 0.04115263128748722,
+      'Day: Thursday': -0.008621281832223373,
+      'Hour: 15': -0.07102581209917823,
+      'Quarter: 2': -0.0005715486385581024,
+      'Race: Hispanic': -0.024309004433210726,
+      'Reason For Stop: Speed Limit Violation': -0.12626931633344213,
+      'Sex: Male': 0.0864596012167103,
+      'base_value': 0.38367837677934163},
+     'proba': 0.24895702302455902,
+     'quarter': 2,
+     'reason_for_stop': 'Speed Limit Violation',
+     'subject_age': 38,
+     'subject_race': 'hispanic',
+     'subject_sex': 'male'}
+  </samp>
+  </pre>
+
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col align-self-center">
+      <hr>
+    </div>
+    <div class="col-md-4">
+      </div>
+  </div>
+  <br />
+
+  <h4 class="text-center" id="arrest">Arrest Endpoint: <code>/api/v1/arrest</code></h4>
+  <br />
+  <h5 class='text-center'>Parameters: </h5>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Required</th>
+        <th scope="col">Data Type</th>
+        <th scope="col">Accepted Values</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">city</th>
+        <td>Yes</td>
+        <td>String</td>
+        <td>One of <code>[Charlotte, Durham, Fayetteville, Greensboro, Raleigh-Winston, Salem, Other]</code>.  Anything
+        that is not one of the specific cities will be treated the same way as the value <code>Other</code> (ie, it does not exist in our model, and will default towards a naive estimates
+        for this feature).</td>
+      </tr>
+      <tr>
+        <th scope="row">subject_age</th>
+        <td>Yes</td>
+        <td>Integer</td>
+        <td>Integer greater than 0.</td>
+      </tr>
+      <tr>
+        <th scope="row">subject_race</th>
+        <td>Yes</td>
+        <td>String</td>
+        <td>One of <code>['black', 'white', 'hispanic', 'unknown', 'other', 'asian/pacific islander']</code></td>
+      </tr>
+      <tr>
+        <th scope="row">subject_sex</th>
+        <td>Yes</td>
+        <td>String</td>
+        <td>One of <code>['male', 'female']</code>.  Other values will be treated as neither male nor female and receive a naive estimate
+        for this feature</td>
+      </tr>
+      <tr>
+        <th scope="row">reason_for_stop</th>
+        <td>Yes</td>
+        <td>String</td>
+        <td>One of <code>['Safe Movement Violation', 'Vehicle Regulatory Violation', 'Vehicle Equipment Violation', 'Other Motor Vehicle Violation', 'Stop Light/Sign Violation',
+            'Speed Limit Violation', 'Investigation', 'Driving While Impaired', 'Seat Belt Violation','Checkpoint']</code>.
+            Other values will be receive a naive estimate for this feature</td>
+      </tr>
+      <tr>
+        <th scope="row">hour</th>
+        <td>Yes</td>
+        <td>Integer</td>
+        <td>Integer between the values of 0 and 23 (inclusive)</td>
+      </tr>
+      <tr>
+        <th scope="row">hour</th>
+        <td>Yes</td>
+        <td>Integer</td>
+        <td>Integer between the values of 0 and 23 (inclusive)</td>
+      </tr>
+      <tr>
+        <th scope="row">dayofweek</th>
+        <td>Yes</td>
+        <td>Integer</td>
+        <td>Integer between the values of 0 and 6 (inclusive).  Values have the following mapping: <code>
+          0: 'Monday',
+          1: 'Tuesday',
+          2: 'Wednesday',
+          3: 'Thursday',
+          4: 'Friday',
+          5: 'Saturday',
+          6: 'Sunday'
+        </code></td>
+      </tr>
+      <tr>
+        <th scope="row">quarter</th>
+        <td>Yes</td>
+        <td>Integer</td>
+        <td>Integer between the values of 1 and 4 (inclusive).  Values have the following mapping: <code>
+          1: 'Winter',
+          2: 'Spring',
+          3: 'Summer',
+          4: 'Fall',
+        </code></td>
+      </tr>
+      <tr>
+        <th scope="row">searched</th>
+        <td>Yes</td>
+        <td>Boolean</td>
+        <td>One of <code>True</code> or <code>False</code></td>
+      </tr>
+      <tr>
+        <th scope="row">searched</th>
+        <td>Yes</td>
+        <td>Boolean</td>
+        <td>One of <code>True</code> or <code>False</code>.  If this value is <code>True</code>, this will be equivalent to choosing
+        <code>You're pulled over</code> for your scenario on the main form.  Choosing <code>False</code> corresonds to the other two scenarios.</td>
+      </tr>
+      <tr>
+        <th scope="row">search_outcome</th>
+        <td>No</td>
+        <td>String</td>
+        <td>One of <code>'known'</code> or <code>'unknown'</code>.  A value of <code>known</code> corresponds to choosing <code>Your search has been completed</code>
+          on the main form.  Choosing <code>unknown</code> corresponds to choosing <code>You're being searched</code>.  <strong>This parameter is required if <code>searched</code>
+          is set to <code>True</code>.</td>
+      </tr>
+      <tr>
+        <th scope="row">reason_for_search</th>
+        <td>No</td>
+        <td>Array/List</td>
+        <td>Should contain any number of <code>['Observation of Suspected Contraband', 'Informant Tip', 'Suspicious Movement', 'Witness Observation', 'Erratic/Suspicious Behavior', 'Other Official Information']</code>.
+        If you leave an empty list, this will be registered as no search happening.  These values correspond to the <code>Reason for Search</code> dropdown.</td>
+      </tr>
+      <tr>
+        <th scope="row">contraband_found</th>
+        <td>No</td>
+        <td>Boolean</td>
+        <td>One of <code>True</code> or <code>False</code>.  <strong>If <code>searched</code> is set to <code>True</code> and <code>outcome</code> is set to <code>known</code>, then this value is required.</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col align-self-center">
+      <hr>
+    </div>
+    <div class="col-md-4">
+      </div>
+  </div>
+
+  <h5 class='text-center'>Returns: </h5>
+
+  <p>The resulting json object will include all of the values provided at the time of request, as well as the following info:
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Data Type</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">proba</th>
+          <td>float</td>
+          <td>Probability of suspect getting arrested based on information given in the request</td>
+        </tr>
+        <tr>
+          <th scope="row">outcome</th>
+          <td>string</td>
+          <td>Will return the value <code>arrest</code></td>
+        </tr>
+        <tr>
+          <th scope="row">outcome_vals</th>
+          <td>object/dictionary</td>
+          <td>Key/value store of each feature and its contribution to the final prediction.</td>
+        </tr>
+        <tr>
+          <th scope="row">Observation of Suspected Contraband</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Informant Tip</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Suspicious Movement</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Witness Observation</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Erratic/Suspicious Behavior</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Other Official Information</th>
+          <td>Boolean</td>
+          <td>Indicates whether or not this value was selected as a reason a search was conducted.  Will only display if <code>searched</code> is set to <code>True</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col align-self-center">
+        <hr>
+      </div>
+      <div class="col-md-4">
+        </div>
+    </div>
+
+    <h5 class='text-center'>Sample Code 1: When <code>searched</code> is set to False</h5>
+    <p class='text-center'>This would correspond to having selected <code>You're pulled over</code> in the main menu.</p>
+
+    <pre>
+      <code>
+        import requests
+
+        api_url = 'http://transparentpolicing.org/api/v1/search'
+        params  = {
+          'city': 'Charlotte',
+          'subject_age': 38,
+          'subject_race': 'hispanic',
+          'subject_sex': 'male',
+          'reason_for_stop': 'Speed Limit Violation',
+          'hour': 15,
+          'dayofweek': 3,
+          'quarter': 2,
+          'searched': False
+        }
+
+        data = requests.get(api_url, params=params).json()
+      </code>
+    </pre>
+
+    <p class='text-center'>This request would provide the following response: </p>
+
+    <pre>
+    <samp>
+      {'city': 'Charlotte',
+       'dayofweek': 3,
+       'hour': 15,
+       'outcome': 'arrest',
+       'outcome_vals': {'Age: 38': 9.280625755901161e-05,
+        'City: Charlotte': 0.023398782340633594,
+        'Day: Thursday': -0.012109921944047313,
+        'Hour: 15': -0.11350505286505463,
+        'Quarter: 2': -0.004521390701531017,
+        'Race: Hispanic': -0.012566689271801445,
+        'Reason For Stop: Speed Limit Violation': -0.19803325500575866,
+        'Sex: Male': 0.18187864648053947,
+        'base_value': 0.45283238010956894},
+       'proba': 0.31746622920036316,
+       'quarter': 2,
+       'reason_for_stop': 'Speed Limit Violation',
+       'subject_age': 38,
+       'subject_race': 'hispanic',
+       'subject_sex': 'male'}
+    </samp>
+    </pre>
+
+    <h5 class='text-center'>Sample Code 2: When <code>searched</code> is set to True and <code>search_outcome</code> is set to <code>unknown</code></h5>
+    <p class='text-center'>This would correspond to having selected <code>You're being searched</code> in the main menu.</p>
+
+    <pre>
+      <code>
+        import requests
+
+        api_url = 'http://transparentpolicing.org/api/v1/search'
+        params  = {
+          'city': 'Charlotte',
+          'subject_age': 38,
+          'subject_race': 'hispanic',
+          'subject_sex': 'male',
+          'reason_for_stop': 'Speed Limit Violation',
+          'hour': 15,
+          'dayofweek': 3,
+          'quarter': 2,
+          'searched': True,
+          # you must specify this parameter if searched is True
+          'search_outcome': 'unknown',
+          # notice we are including this parameter now
+          'reason_for_search': ['Informant Tip']
+        }
+
+        data = requests.get(api_url, params=params).json()
+      </code>
+    </pre>
+
+    <p class='text-center'>This request would provide the following response: </p>
+
+    <pre>
+    <samp>
+      {'Erratic/Suspicious Behavior': False,
+       'Informant Tip': True,
+       'Observation of Suspected Contraband': False,
+       'Other Official Information': False,
+       'Suspicious Movement': False,
+       'Witness Observation': False,
+       'city': 'Charlotte',
+       'dayofweek': 3,
+       'hour': 15,
+       'outcome': 'arrest',
+       'outcome_vals': {'Age: 38': 0.0036651827867487537,
+        'City: Charlotte': 0.06378358862878429,
+        'Day: 2': -0.0011834411170477152,
+        'Hour: Thursday': -0.0049067786417331775,
+        'Omitted Search Reasons': -0.08365666248565296,
+        'Quarter: 0': -0.008345920513692514,
+        'Race: Hispanic': 0.026979535396049713,
+        'Reason For Stop: Speed Limit Violation': -0.055218472150808336,
+        'Reason for Search: Informant Tip': 0.6664153046659078,
+        'Sex: Male': 0.06942161797295551,
+        'base_value': 0.1931206832111735},
+       'proba': 0.8700745701789856,
+       'quarter': 2,
+       'reason_for_stop': 'Speed Limit Violation',
+       'subject_age': 38,
+       'subject_race': 'hispanic',
+       'subject_sex': 'male'}
+    </samp>
+    </pre>
+
+    <h5 class='text-center'>Sample Code 3: When <code>searched</code> is set to True and <code>search_outcome</code> is set to <code>known</code></h5>
+    <p class='text-center'>This would correspond to having selected <code>Your search has been completed</code> in the main menu.</p>
+
+    <pre>
+      <code>
+        import requests
+
+        api_url = 'http://transparentpolicing.org/api/v1/search'
+        params  = {
+          'city': 'Charlotte',
+          'subject_age': 38,
+          'subject_race': 'hispanic',
+          'subject_sex': 'male',
+          'reason_for_stop': 'Speed Limit Violation',
+          'hour': 15,
+          'dayofweek': 3,
+          'quarter': 2,
+          'searched': True,
+          # you must specify this parameter if searched is True
+          'search_outcome': 'known',
+          # notice we are including this parameter now
+          'reason_for_search': ['Informant Tip'],
+          # must include this if search_outcome is known
+          'contraband_found': True
+        }
+
+        data = requests.get(api_url, params=params).json()
+      </code>
+    </pre>
+
+    <p class='text-center'>This request would provide the following response: </p>
+
+    <pre>
+    <samp>
+      {'Erratic/Suspicious Behavior': False,
+       'Informant Tip': True,
+       'Observation of Suspected Contraband': False,
+       'Other Official Information': False,
+       'Suspicious Movement': False,
+       'Witness Observation': False,
+       'city': 'Charlotte',
+       'contraband_found': True,
+       'dayofweek': 3,
+       'hour': 15,
+       'outcome': 'arrest',
+       'outcome_vals': {'Age: 38': -0.01220522184820416,
+        'City: Charlotte': 0.12579894150998064,
+        'Contraband Found: True': -0.0023210990779877743,
+        'Day: 2': -0.0004825596599101367,
+        'Hour: Thursday': -0.004428024995101677,
+        'Omitted Search Reasons': -0.07414706763083614,
+        'Quarter: 0': -0.008609372672243116,
+        'Race: Hispanic': -0.0005371725227779475,
+        'Reason For Stop: Speed Limit Violation': -0.061069510175787024,
+        'Reason for Search: Informant Tip': 0.6284118484900485,
+        'Sex: Male': 0.10126257514080145,
+        'base_value': 0.15845381116529614},
+       'proba': 0.8501270413398743,
+       'quarter': 2,
+       'reason_for_stop': 'Speed Limit Violation',
+       'subject_age': 38,
+       'subject_race': 'hispanic',
+       'subject_sex': 'male'}
+    </samp>
+    </pre>
+
+{% endblock %}

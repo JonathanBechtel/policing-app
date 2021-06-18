@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>My name is Jonathan Bechtel, and I work as a data scientist in New York city.  I spend most of my professional time building statistical models,
+  deploying them as data products that others can use, or teaching others how to do so.  I created this website
+to scratch an itch I've had for sometime:  given the tools that I already use, what should I think about the topic of policing in the US?</p>
+
+<p>A lot of ink has already been spilled on this topic, however it tends to fall into two disparate camps: </p>
+
+  <ol>
+    <li>anecdotes that, while powerful, do not lend mechanistic explanations for how and why outcomes manifest themselves <i>for the population as a whole</i></li>
+    <li>dry academic studies that study a narrow aspect of the problem and report results in archaic statistical jargon</li>
+  </ol>
+
+<p>These two outlets interact with one another, but not in a way that is satisfactory.  There's often news coverage of important academic studies,
+  but often in a way that emphasizes a few particular facts and (importantly) doesn't adequately capture what such studies do *not* tell you about what
+  is being studied.  Ie, they often commit sins of omission.</p>
+
+<h4>Data + Analysis + Dashboard = Panoramic Understanding</h4>
+
+<p>Something I have learned very clearly from my professional life is that work done in the realm of data and statistics is best served as an interactive
+   product that other people can explore on their own terms.  It allows for unique benefits:</p>
+   <ul>
+     <li>People can probe the model for the particular circumstances that they care about</li>
+     <li>The work becomes interpretable to a much wider audience (some of us are just more visual, and many folks don't like to read)</li>
+     <li>It allows people to more thoroughly study the domain by exploring a range of outcomes and values</li>
+     <li>The meaning is more explicit.   Punching in specific values and seeing what happens as a result often tells you more about how a model works than a
+     summary article that reads "New Study Finds XYZ Group Is Disproportionatley Impacted by ABC Dynamic"</li>
+     <li>Because of the latter point, work that's interactive makes it much easier for everyone to spot holes in it.  If you can see something's output directly BS is easier to catch.</li>
+  </ul>
+
+<p>In the case of policing, I thought it would be useful to understand how an ML algorithm interprets the contributions to a policing outcome (search, arrest), given common circumstances that are recorded
+  at the time of the event when trained on 4.5 million of such examples.</p>
+
+<h4>Open Source + Interactive + API = The Holy Trinity of Reproducibility</h4>
+
+<p>This work has the ability to be studied and critiqued in three different ways:</p>
+
+<ol>
+  <li>You can play around with the visualizer on the main page and look at the model's results</li>
+  <li>You can look over the code at the projects main github repo (and even contribute to it if you want to)</li>
+  <li>You can access model data <a href="/api">via an API that was developed for the project.</a></li>
+</ol>
+
+<p>The point is that there are plenty of ways to poke around and decide for yourself whether or not something needs to be improved upon.
+Please do not be shy about trying to figure out what is wrong with what you see, and if you have questions or comments about what could be done better,
+please <a href="https://www.jonathanbech.tel/contact">feel free to reach out.</a></p>
+
+
+<p>If you would like to learn more about the particulars of how this site works and why it produces the results that it does, please head over to the <a href="/faq">faq section.</a></p>
+<p>If you would like to just see the results it produces, head over to the <a href="/home">main page</a> and try entering different values to see what comes up.
+<p>Hopefully, this work will make it easier for people to probe the totality of police outcomes and study for themselves how and what contributes to the results we care so much about.</p>
+{% endblock %}

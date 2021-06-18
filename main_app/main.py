@@ -10,15 +10,15 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/about')
 def main_page():
-    return render_template('base.html', 
-                           title='The About Page')
+    return render_template('about.html', 
+                           title='Better Understand Problems With Data')
 
 @bp.route('/api')
 def dashboard_page():
-    return render_template('base.html',
-                           title='The API Page')
+    return render_template('api.html',
+                           title='Connect Directly To Our Model')
 
 @bp.route('/faq')
 def faq_page():
-    return render_template('base.html',
-                           title='The FAQ Page')
+    return render_template('faq.html',
+                           title='Frequently Asked Questions')
