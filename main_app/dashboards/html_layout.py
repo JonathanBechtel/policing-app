@@ -20,19 +20,19 @@ html_layout = """
                       align-items: center;
                       display: flex;
                     }
-                    
+
                     .highlight {
                       background-color: #1d6b87;
                       font-size: 2em;
                       padding-left: 3em;
                       padding-right: 3em;
                     }
-                    
+
                     .highlight p {
                       color: #fcfcfc;
                     }
                 </style>
-            
+
             </head>
             <body>
               <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -60,20 +60,21 @@ html_layout = """
               </nav>
                 <div class='container'>
                     <div class="row other">
-                          <div class="col-5">
-                             <h3 class="strong">Using Data to Understand Police Outcomes</h3>
-                             <p>This website analyzed over 4.5 million police stops in North Carolina to better understand what factors impact police outcomes.  The rest
-                                of this website is designed to allow you to explore and understand our results.</p>
+                          <div class="col-4">
+                             <h2>Use Data to Understand Police Outcomes</h2>
+                             <p>This website uses a machine learning model trained on 4.5 million police stops in North Carolina to better understand what factors impact police outcomes.  The rest
+                                of this website is designed to allow you to explore and understand the results.</p>
+                                <a href="#main" class="btn btn-success btn-lg" role="button">Start Exploring</a>
                          </div>
-                         <div class="col-7">
-                             <img src="https://policing-data.s3.amazonaws.com/cover.png" class="img-fluid" style="max-width: 600px;">
+                         <div class="col-8">
+                             <img src="https://policing-data.s3.amazonaws.com/cover.jpg" class="img-fluid" style="max-height: 700px;">
                          </div>
                     </div>
                 </div>
                 <div class="row highlight">
                     <p class='text-center'>Fill out the form on the left part of the screen below to see how our statistical model predicts and interprets the causes of a policing outcome.</p>
                 </div>
-                <div class="container-fluid">
+                <div class="container-fluid" id="main">
                     {%app_entry%}
                     <footer>
                         {%config%}

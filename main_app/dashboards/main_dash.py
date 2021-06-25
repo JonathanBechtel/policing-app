@@ -8,13 +8,12 @@ import dash_html_components as html
 from .html_layout import html_layout
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, ALL, State
-from .data import load_unique_vals, add_search_inputs
+from .data import load_unique_vals, add_search_inputs, make_api_call
 import requests
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from pandas import DataFrame
-
-
+import os
 
 def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
@@ -210,7 +209,7 @@ def register_callbacks(app):
             'quarter': args[8],
             }
 
-        if args[0] == 0:
+        if not args[0]:
             return html.H1("Please Fill Out the Form to the Left and Hit 'Run Analysis' To See Your Chances of Being Arrested or Searched")
 
         if args[1] in 'You have been searched':
@@ -223,8 +222,13 @@ def register_callbacks(app):
             params['search_outcome'] = 'unknown'
             params['searched'] = False
 
-        params = add_search_inputs(params, args[11])
-        request = requests.get(url=f"http://police-project-test.xyz/api/v1/{args[10]}", params=params).json()
+        params  = add_search_inputs(params, args[11])
+        request = make_api_call(args[10], params)
+        try:
+            request = request.json()
+        except Exception as e:
+            print(f"Could not load json: {e}")
+
         chart_data = request.pop('outcome_vals')
         base_value = chart_data.pop('base_value')
         new_sample = DataFrame(chart_data, index=[0]).T
