@@ -37,7 +37,7 @@ def add_search_inputs(params, search_args):
 
 def make_api_call(end_point_type, params):
     if os.environ['FLASK_ENV'] == 'development':
-        username = os.environ['USERNAME']
+        username = os.environ['SIGNIN']
         password = os.environ['PASSWORD']
         base_url = 'http://www.police-project-test.xyz/api/v1/'
         api_url  = f'{base_url}{end_point_type}'

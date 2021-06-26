@@ -39,6 +39,7 @@ def search_prediction():
     info_dict['proba'] = float(stop_search_pipe.predict_proba(sample)[0][1])
     info_dict['outcome'] = 'search'
     
+    print("Building the SHAP values")
     chart_data = generate_shap_chart_data(sample, stop_search_pipe, stop_search_explainer)
     info_dict['outcome_vals'] = chart_data
 

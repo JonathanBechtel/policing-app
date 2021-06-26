@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Page for Plotly Dashboard
 """
@@ -9,11 +8,9 @@ from .html_layout import html_layout
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, ALL, State
 from .data import load_unique_vals, add_search_inputs, make_api_call
-import requests
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from pandas import DataFrame
-import os
 
 def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
@@ -147,7 +144,7 @@ def init_dashboard(server):
                         dcc.Dropdown(
                             id='reason-dropdown',
                             options = [
-                                {'label': i, 'value': i } for i in unique_vals['reason_for_stop']
+                                {'label': i['label'], 'value': i['value'] } for i in unique_vals['reason_for_stop']
                                 ],
                             value='Safe Movement Violation',
                             clearable=False)
@@ -223,12 +220,13 @@ def register_callbacks(app):
             params['searched'] = False
 
         params  = add_search_inputs(params, args[11])
-        request = make_api_call(args[10], params)
+        
         try:
-            request = request.json()
+            request = make_api_call(args[10], params)
         except Exception as e:
             print(f"Could not load json: {e}")
 
+        print(request)
         chart_data = request.pop('outcome_vals')
         base_value = chart_data.pop('base_value')
         new_sample = DataFrame(chart_data, index=[0]).T
@@ -267,9 +265,6 @@ def register_callbacks(app):
             dropdown_val = None
         else:
             dropdown_val = search_vals[0]
-
-        print(f"Value of search_vals: {search_vals}")
-        print(f"Value of dropdown_val: {dropdown_val}")
 
         unique_vals = load_unique_vals()
         if scenario_val == 'You are pulled over':
