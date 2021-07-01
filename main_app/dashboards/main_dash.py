@@ -226,7 +226,6 @@ def register_callbacks(app):
         except Exception as e:
             print(f"Could not load json: {e}")
 
-        print(request)
         chart_data = request.pop('outcome_vals')
         base_value = chart_data.pop('base_value')
         new_sample = DataFrame(chart_data, index=[0]).T
@@ -261,11 +260,13 @@ def register_callbacks(app):
                    Input('scenario-radio', 'value'),
                    State({'type': 'input', 'index': ALL}, 'value'))
     def display_search_row(scenario_val, search_vals):
+        print(scenario_val, search_vals)
         if not search_vals:
             dropdown_val = None
         else:
             dropdown_val = search_vals[0]
 
+        print(search_vals)
         unique_vals = load_unique_vals()
         if scenario_val == 'You are pulled over':
             return []
@@ -286,7 +287,7 @@ def register_callbacks(app):
         elif scenario_val == 'Your search has been completed':
             return [
                     dbc.Col([
-                        dbc.Label("Reason For Search (choose all that apply, elave blank if none conducted)", html_for={'type': 'input', 'index': 0}),
+                        dbc.Label("Reason For Search (choose all that apply)", html_for={'type': 'input', 'index': 0}),
                         dcc.Dropdown(
                             id={'type': 'input',
                                 'index': 0},
@@ -295,7 +296,7 @@ def register_callbacks(app):
                             ],
                             clearable = False,
                             multi = True,
-                            value = dropdown_val)
+                            value = dropdown_val if dropdown_val else 'Erratic/Suspicious Behavior')
                         ], width=6),
                     dbc.Col([
                         dbc.Label("Result of Search", html_for={'type': 'input', 'index': 1}),
