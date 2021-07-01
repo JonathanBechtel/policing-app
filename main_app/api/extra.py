@@ -22,12 +22,13 @@ def assign_stop_value_to_alias(value_list: list, list_of_reason_dicts: list) -> 
     reason_vals = [reason['value'] for reason in list_of_reason_dicts]
     for idx, value in enumerate(value_list):
         if value in reason_vals:
+            print(value)
             for reason in list_of_reason_dicts:
                 if reason['value'] == value:
                     value_list[idx] = reason['label']
             break
     return value_list
-        
+
 
 def load_model_pipelines():
     folder = os.path.dirname(os.path.abspath(__file__)) + '/models/pipelines'
@@ -82,8 +83,9 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
     5: 'Saturday',
     6: 'Sunday'
     }
-    
+
     reasons_for_stop = load_reason_for_stop()
+    print(reasons_for_stop)
 
     search_cols = ['Observation of Suspected Contraband', 'Informant Tip', 'Suspicious Movement',\
                     'Witness Observation', 'Erratic/Suspicious Behavior', 'Other Official Information']
@@ -133,10 +135,10 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
     col_vals = new_sample.values[0].tolist()
     col_vals = assign_stop_value_to_alias(col_vals, reasons_for_stop)
     col_vals = [val.title() if type(val) == str else int(val) for val in col_vals]
-    
+
     # done to replace the reason for stop with its alias
-    
-    
+
+
     new_sample.columns = [f"{col}: {value}" if  col not in search_cols and col != 'Omitted Search Reasons'
                           else col for col, value in zip(new_sample.columns, col_vals)]
     if search_outcome:

@@ -207,7 +207,7 @@ def register_callbacks(app):
             }
 
         if not args[0]:
-            return html.H1("Please Fill Out the Form to the Left and Hit 'Run Analysis' To See Your Chances of Being Arrested or Searched")
+            return html.H2("Please Fill Out the Form to the Left and Hit 'Run Analysis' To See Your Results")
 
         if args[1] in 'You have been searched':
             params['search_outcome'] = 'unknown'
@@ -220,7 +220,7 @@ def register_callbacks(app):
             params['searched'] = False
 
         params  = add_search_inputs(params, args[11])
-        
+
         try:
             request = make_api_call(args[10], params)
         except Exception as e:
@@ -271,7 +271,7 @@ def register_callbacks(app):
             return []
         elif scenario_val == 'You have been searched':
             return dbc.Col([
-                        dbc.Label("Reason For Search (Choose All That Apply)", html_for={'type': 'input', 'index': 0}),
+                        dbc.Label("Reason For Search (choose all that apply, leave blank if none conducted)", html_for={'type': 'input', 'index': 0}),
                         dcc.Dropdown(
                             id={'type': 'input',
                                 'index': 0},
@@ -286,7 +286,7 @@ def register_callbacks(app):
         elif scenario_val == 'Your search has been completed':
             return [
                     dbc.Col([
-                        dbc.Label("Reason For Search (choose all that apply, Leave blank if no search conducted)", html_for={'type': 'input', 'index': 0}),
+                        dbc.Label("Reason For Search (choose all that apply, elave blank if none conducted)", html_for={'type': 'input', 'index': 0}),
                         dcc.Dropdown(
                             id={'type': 'input',
                                 'index': 0},
