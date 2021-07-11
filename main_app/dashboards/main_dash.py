@@ -219,9 +219,11 @@ def register_callbacks(app):
             params['search_outcome'] = 'unknown'
             params['searched'] = False
 
+        print(f"Value of params argument: {args[11]}")
         params  = add_search_inputs(params, args[11])
 
         try:
+            print(f"Value of params: {params}")
             request = make_api_call(args[10], params)
         except Exception as e:
             print(f"Could not load json: {e}")
