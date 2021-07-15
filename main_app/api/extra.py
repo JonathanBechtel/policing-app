@@ -23,7 +23,6 @@ def assign_stop_value_to_alias(value_list: list, list_of_reason_dicts: list) -> 
     reason_vals = [reason['value'] for reason in list_of_reason_dicts]
     for idx, value in enumerate(value_list):
         if value in reason_vals:
-            print(value)
             for reason in list_of_reason_dicts:
                 if reason['value'] == value:
                     value_list[idx] = reason['label']
@@ -143,7 +142,6 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
     col_vals = [val.title() if type(val) == str else int(val) for val in col_vals]
 
     # done to replace the reason for stop with its alias
-
 
     new_sample.columns = [f"{col}: {value}" if  col not in search_cols and col != 'Omitted Search Reasons'
                           else col for col, value in zip(new_sample.columns, col_vals)]
