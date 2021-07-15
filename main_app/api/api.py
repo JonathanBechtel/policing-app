@@ -95,18 +95,21 @@ def arrest_prediction():
 
     info_dict['outcome'] = 'arrest'
 
-    if str2bool(request.args['searched']):
-        if request.args['search_outcome'] == 'known':
-            chart_data = generate_shap_chart_data(sample, arrest_pipe_w_outcome,
-                                                      arrest_explainer_w_outcome,
-                                                      search_val=True,
-                                                      search_outcome=True)
+    try:
+        if str2bool(request.args['searched']):
+            if request.args['search_outcome'] == 'known':
+                chart_data = generate_shap_chart_data(sample, arrest_pipe_w_outcome,
+                                                          arrest_explainer_w_outcome,
+                                                          search_val=True,
+                                                          search_outcome=True)
+            else:
+                chart_data = generate_shap_chart_data(sample, arrest_pipe_no_outcome,
+                                                          arrest_explainer_no_outcome,
+                                                          search_val=True)
         else:
-            chart_data = generate_shap_chart_data(sample, arrest_pipe_no_outcome,
-                                                      arrest_explainer_no_outcome,
-                                                      search_val=True)
-    else:
-        chart_data = generate_shap_chart_data(sample, stop_arrest_pipe, stop_arrest_explainer)
+            chart_data = generate_shap_chart_data(sample, stop_arrest_pipe, stop_arrest_explainer)
+    except Exception as e:
+        print(f"Could not generate shap values because: {e}")
 
     info_dict['outcome_vals'] = chart_data
 

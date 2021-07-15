@@ -19,6 +19,7 @@ def load_reason_for_stop():
     return unique_vals['reason_for_stop']
 
 def assign_stop_value_to_alias(value_list: list, list_of_reason_dicts: list) -> str:
+    print(f"List of reasons: {list_of_reason_dicts}")
     reason_vals = [reason['value'] for reason in list_of_reason_dicts]
     for idx, value in enumerate(value_list):
         if value in reason_vals:
@@ -74,6 +75,7 @@ def load_explainers():
     return stop_search_explainer, stop_arrest_explainer, arrest_explainer_w_outcome, arrest_explainer_no_outcome
 
 def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, search_outcome=False):
+
     day_mapping = {
     0: 'Monday',
     1: 'Tuesday',
@@ -91,6 +93,11 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
 
     vals             = sample.to_dict('records')[0]
     transformed_vals = pipeline[-2].transform(sample)
+    print(f"Transformed vals: {transformed_vals.values}")
+    print(transformed_vals.info())
+    print(transformed_vals.shape)
+    print(transformed_vals.columns.tolist())
+    print(explainer.data[0])
     shap_values      = explainer(transformed_vals)
     chart_vals       = {col: shap_val for col, shap_val in zip(transformed_vals.columns, shap_values.values[0])}
     sex_val          = sum(value for key, value in chart_vals.items() if 'sex' in key)
