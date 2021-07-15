@@ -85,7 +85,6 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
     }
 
     reasons_for_stop = load_reason_for_stop()
-    print(reasons_for_stop)
 
     search_cols = ['Observation of Suspected Contraband', 'Informant Tip', 'Suspicious Movement',\
                     'Witness Observation', 'Erratic/Suspicious Behavior', 'Other Official Information']
