@@ -11,6 +11,7 @@ from .data import load_unique_vals, add_search_inputs, make_api_call
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from pandas import DataFrame
+import os
 
 def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
