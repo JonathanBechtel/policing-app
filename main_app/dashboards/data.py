@@ -44,9 +44,7 @@ def make_api_call(end_point_type, params):
         password = os.environ['PASSWORD']
         base_url = 'http://www.police-project-test.xyz/api/v1/'
         api_url  = f'{base_url}{end_point_type}'
-        print(api_url)
         request  = requests.get(api_url, params=params, auth=(username, password))
-        print(f"status code: {request.status_code}")
         return request.json()
     elif os.environ['FLASK_ENV'] == 'production':
         base_url = 'http://www.transparentpolicing.org/api/v1/'
