@@ -19,7 +19,6 @@ def load_reason_for_stop():
     return unique_vals['reason_for_stop']
 
 def assign_stop_value_to_alias(value_list: list, list_of_reason_dicts: list) -> str:
-    print(f"List of reasons: {list_of_reason_dicts}")
     reason_vals = [reason['value'] for reason in list_of_reason_dicts]
     for idx, value in enumerate(value_list):
         if value in reason_vals:
@@ -92,15 +91,11 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
 
     vals             = sample.to_dict('records')[0]
     transformed_vals = pipeline[-2].transform(sample)
-    print(f"Transformed vals: {transformed_vals.values}")
-    print(transformed_vals.info())
-    print(transformed_vals.shape)
-    print(transformed_vals.columns.tolist())
-    print(explainer.data[0])
     shap_values      = explainer(transformed_vals)
     chart_vals       = {col: shap_val for col, shap_val in zip(transformed_vals.columns, shap_values.values[0])}
     sex_val          = sum(value for key, value in chart_vals.items() if 'sex' in key)
     race_val         = sum(value for key, value in chart_vals.items() if 'race' in key)
+    contra_val       = sum(value for key, value in chart_vals.items() if 'contraband' in key)
     keys_to_drop     = [key for key in chart_vals.keys() if 'race' in key or 'sex' in key]
 
     for key in keys_to_drop:
@@ -135,6 +130,8 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
         if not search_outcome:
             new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Reason For Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Omitted Search Reasons']
         else:
+            new_sample.loc[1, 'contraband_found'] = contra_val
+            new_sample.drop(['contraband_found_False', 'contraband_found_True'], axis=1, inplace=True)
             new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Contraband Found', 'Reason For Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Omitted Search Reasons']
 
     col_vals = new_sample.values[0].tolist()

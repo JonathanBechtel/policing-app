@@ -98,6 +98,7 @@ def arrest_prediction():
     try:
         if str2bool(request.args['searched']):
             if request.args['search_outcome'] == 'known':
+                print(f"Value of info_dict: {info_dict}")
                 chart_data = generate_shap_chart_data(sample, arrest_pipe_w_outcome,
                                                           arrest_explainer_w_outcome,
                                                           search_val=True,
