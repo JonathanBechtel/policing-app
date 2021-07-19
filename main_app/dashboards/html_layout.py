@@ -78,9 +78,7 @@ html_layout = """
                     {%app_entry%}
                     <footer>
                         {%config%}
-                        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDWR3ZTMGT"></script>
                         {%scripts%}
-
                         {%renderer%}
                         <ul class="list-inline text-center">
                           <li class="list-inline-item">Developed by <a href="http://jonathanbech.tel">Jonathan Bechtel</a></li>
