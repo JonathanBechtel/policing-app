@@ -12,14 +12,17 @@ bp = Blueprint('main', __name__)
 @bp.route('/about')
 def main_page():
     return render_template('about.html',
-                           title='Better Understand Problems With Data')
+                           title='Better Understand Problems With Data',
+                           environment = os.environ.get('FLASK_ENV'))
 
 @bp.route('/api')
 def dashboard_page():
     return render_template('api.html',
-                           title='Connect Directly To The Model')
+                           title='Connect Directly To The Model',
+                           environment = os.environ.get('FLASK_ENV'))
 
 @bp.route('/faq')
 def faq_page():
     return render_template('faq.html',
-                           title='Frequently Asked Questions')
+                           title='Frequently Asked Questions',
+                           environment = os.environ.get('FLASK_ENV'))
