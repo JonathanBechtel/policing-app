@@ -33,6 +33,16 @@ html_layout = """
                     }
                 </style>
 
+                <!-- Global site tag (gtag.js) - Google Analytics -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDWR3ZTMGT"></script>
+                <script>
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', 'G-WDWR3ZTMGT');
+                </script>
+
             </head>
             <body>
               <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -78,7 +88,6 @@ html_layout = """
                     {%app_entry%}
                     <footer>
                         {%config%}
-                        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDWR3ZTMGT"></script>
                         {%scripts%}
 
                         {%renderer%}
