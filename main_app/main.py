@@ -5,20 +5,24 @@ routing page for the application
 
 from flask import current_app as app
 from flask import render_template, Blueprint
+import os
 
 bp = Blueprint('main', __name__)
 
 @bp.route('/about')
 def main_page():
-    return render_template('about.html', 
-                           title='Better Understand Problems With Data')
+    return render_template('about.html',
+                           title='Better Understand Problems With Data',
+                           environment = os.environ.get('FLASK_ENV'))
 
 @bp.route('/api')
 def dashboard_page():
     return render_template('api.html',
-                           title='Connect Directly To Our Model')
+                           title='Connect Directly To The Model',
+                           environment = os.environ.get('FLASK_ENV'))
 
 @bp.route('/faq')
 def faq_page():
     return render_template('faq.html',
-                           title='Frequently Asked Questions')
+                           title='Frequently Asked Questions',
+                           environment = os.environ.get('FLASK_ENV'))
