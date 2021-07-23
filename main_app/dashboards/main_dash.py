@@ -23,6 +23,7 @@ def init_dashboard(server):
     )
 
     dash_app.index_string = html_layout
+    dash_app.title        = "Police Xray"
     unique_vals = load_unique_vals()
     register_callbacks(dash_app)
 
@@ -237,7 +238,7 @@ def register_callbacks(app):
             fig.add_trace(go.Bar(x=new_sample[0], y=new_sample.index, text=new_sample[0], orientation='h', marker={'color': new_sample['Positive'], 'colorscale': 'spectral'}))
             fig.update_traces(texttemplate='%{text:.0%}', textposition='auto')
             fig.update_layout(uniformtext_minsize = 8,
-                      uniformtext_mode = 'hide',
+                      #uniformtext_mode = 'hide',
                       xaxis = {'tickformat' : '%'},
                       xaxis_title = f"Base Value: {base_value:.2%}",
                       title={'text': "What Contributes to the Outcome: ",
