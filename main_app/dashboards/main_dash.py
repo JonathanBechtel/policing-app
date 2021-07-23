@@ -11,7 +11,6 @@ from .data import load_unique_vals, add_search_inputs, make_api_call
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from pandas import DataFrame
-import os
 
 def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
@@ -220,11 +219,9 @@ def register_callbacks(app):
             params['search_outcome'] = 'unknown'
             params['searched'] = False
 
-        print(f"Value of params argument: {args[11]}")
         params  = add_search_inputs(params, args[11])
 
         try:
-            print(f"Value of params: {params}")
             request = make_api_call(args[10], params)
         except Exception as e:
             print(f"Could not load json: {e}")
