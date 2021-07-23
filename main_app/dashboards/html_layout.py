@@ -89,7 +89,6 @@ html_layout = """
                     <footer>
                         {%config%}
                         {%scripts%}
-
                         {%renderer%}
                         <ul class="list-inline text-center">
                           <li class="list-inline-item">Developed by <a href="http://jonathanbech.tel">Jonathan Bechtel</a></li>
