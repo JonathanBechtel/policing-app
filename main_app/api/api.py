@@ -5,6 +5,7 @@ Primary file for the API endpoints to deliver model data
 
 from flask import Blueprint, request, jsonify
 import pandas as pd
+import sys
 
 from .extra import str2bool, load_model_pipelines, load_explainers, generate_shap_chart_data
 
@@ -77,10 +78,10 @@ def arrest_prediction():
             sample['contraband_found'] = str2bool(request.args['contraband_found'])
             info_dict['contraband_found'] = str2bool(request.args['contraband_found'])
             sample = sample[['city', 'subject_age', 'subject_race', 'subject_sex',\
-                             'contraband_found','reason_for_stop', 'Observation of Suspected Contraband',\
+                             'reason_for_stop', 'Observation of Suspected Contraband',\
                             'Informant Tip', 'Suspicious Movement', 'Witness Observation',\
                             'Erratic/Suspicious Behavior', 'Other Official Information',\
-                            'hour', 'dayofweek', 'quarter']]
+                            'hour', 'dayofweek', 'quarter', 'contraband_found']]
             info_dict['proba'] = float(arrest_pipe_w_outcome.predict_proba(sample)[0][1])
         else:
             sample = sample[['city', 'subject_age', 'subject_race', 'subject_sex',\
@@ -110,8 +111,7 @@ def arrest_prediction():
         else:
             chart_data = generate_shap_chart_data(sample, stop_arrest_pipe, stop_arrest_explainer)
     except Exception as e:
-        print(f"Could not generate shap values because: {e}")
-
+        print(f"Could not generate shap values because: {e}, on line: {sys.exc_info()[-1].tb_lineno}")
     info_dict['outcome_vals'] = chart_data
 
     return jsonify(info_dict)

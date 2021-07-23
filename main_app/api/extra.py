@@ -98,6 +98,7 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
     contra_val       = sum(value for key, value in chart_vals.items() if 'contraband' in key)
     keys_to_drop     = [key for key in chart_vals.keys() if 'race' in key or 'sex' in key]
 
+
     for key in keys_to_drop:
         del chart_vals[key]
 
@@ -114,25 +115,25 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
         for col in search_cols:
             # if the number is one
             if vals[col]:
-                new_sample.rename({col: f'Reason for Search: {col}'}, axis=1, inplace=True)
+                new_sample.rename({col: f'Search: {col}'}, axis=1, inplace=True)
             else:
                 false_search_vals += chart_vals[col]
                 num_false_cols    += 1
                 cols_to_drop.append(col)
         new_sample.drop(cols_to_drop, axis=1, inplace=True)
-        new_sample['Omitted Search Reasons'] = false_search_vals
+        new_sample['Other'] = false_search_vals
 
     if not search_val and not search_outcome:
-        new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Reason For Stop', 'Hour', 'Day', 'Quarter']
+        new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Stop', 'Hour', 'Day', 'Quarter']
 
     if search_val:
-        search_cols = [col for col in new_sample.columns if 'Search' in col and col != 'Omitted Search Reasons']
+        search_cols = [col for col in new_sample.columns if 'Search' in col and col != 'Other']
         if not search_outcome:
-            new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Reason For Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Omitted Search Reasons']
+            new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Other']
         else:
             new_sample.loc[1, 'contraband_found'] = contra_val
             new_sample.drop(['contraband_found_False', 'contraband_found_True'], axis=1, inplace=True)
-            new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Contraband Found', 'Reason For Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Omitted Search Reasons']
+            new_sample.columns = ['City', 'Age', 'Race', 'Sex', 'Stop'] + search_cols + ['Hour', 'Day', 'Quarter', 'Contraband', 'Other']
 
     col_vals = new_sample.values[0].tolist()
     col_vals = assign_stop_value_to_alias(col_vals, reasons_for_stop)
@@ -140,14 +141,14 @@ def generate_shap_chart_data(sample, pipeline, explainer, search_val=False, sear
 
     # done to replace the reason for stop with its alias
 
-    new_sample.columns = [f"{col}: {value}" if  col not in search_cols and col != 'Omitted Search Reasons'
+    new_sample.columns = [f"{col}: {value}" if  col not in search_cols and col != 'Other'
                           else col for col, value in zip(new_sample.columns, col_vals)]
     if search_outcome:
-        contraband_col  = new_sample.columns.values[4]
+        contraband_col  = new_sample.columns.values[-2]
         first_col_part  = contraband_col[:-1]
         second_col_part = str(bool(int(contraband_col[-1])))
         contraband_col  = first_col_part + second_col_part
-        new_sample.columns.values[4] = contraband_col
+        new_sample.columns.values[-2] = contraband_col
     new_sample = new_sample.T
     del new_sample[0]
     new_sample.sort_values(by=1, inplace=True)
