@@ -136,7 +136,7 @@ def init_dashboard(server):
                             id='city-dropdown',
                             options=[
                             {'label': i, 'value': i} for i in unique_vals['city']
-                            ],
+                            ] + [{'label': 'Other', 'value': 'Other'}],
                             clearable = False,
                             value='Charlotte')
                         ], width=4),
@@ -279,7 +279,7 @@ def register_callbacks(app):
                                 'index': 0},
                             options = [
                                 {'label': i, 'value': i} for i in unique_vals['reason_for_search']
-                            ],
+                            ] + [{'label': 'Other', 'value': 'Other'}],
                             clearable = False,
                             multi = True,
                             value = dropdown_val)
